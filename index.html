@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>list for IIT</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #4d1e2c;
+            margin: 0;
+        }
+        .container {
+            background: #78494d;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 420px;
+            text-align: center;
+        }
+        .note {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 2px solid #000000;
+            border-radius: 5px;
+            position: relative;
+            font-weight: bolder;
+            color:rgb(7, 7, 7);
+            font-size: 20px;
+        }
+        .delete-btn {
+            background-color: rgb(21, 15, 57);
+            color: rgb(122, 184, 198);
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-left: -10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3e55b4;
+            color: rgb(166, 222, 218);
+            cursor: pointer;
+            margin-bottom: 35px;
+        }
+        h1, h2 {
+            margin: 0 0 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Saare sacrifices ka badla lena h IIT me</h1>
+        <textarea id="noteInput" rows="4" placeholder="or kuch...?"></textarea><br>
+        <button onclick="saveNote()">Save</button>
+        <h2>List:</h2>
+        <div id="notesContainer"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadNotes);
+
+        function saveNote() {
+            const noteInput = document.getElementById('noteInput');
+            const noteText = noteInput.value.trim();
+            if (noteText === "") {
+                alert("type bhi to kar kuch");
+                return;
+            }
+
+            const notes = getNotes();
+            notes.push(noteText);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            noteInput.value = "";
+            displayNotes();
+        }
+
+        function getNotes() {
+            const notes = localStorage.getItem('notes');
+            return notes ? JSON.parse(notes) : [];
+        }
+
+        function loadNotes() {
+            displayNotes();
+        }
+
+        function displayNotes() {
+            const notesContainer = document.getElementById('notesContainer');
+            notesContainer.innerHTML = "";
+            const notes = getNotes();
+
+            notes.forEach((note, index) => {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('note');
+                noteElement.innerHTML =` 
+                    ${note}
+                    <button class="delete-btn" onclick="deleteNote(${index})">Delete</button>
+                `;
+                notesContainer.appendChild(noteElement);
+            });
+        }
+
+        function deleteNote(index) {
+            const notes = getNotes();
+            notes.splice(index, 1);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            displayNotes();
+        }
+    </script>
+</body>
+</html>
